@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hw1/EX-1-START-CODE/provider/courses_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/course.dart';
 import 'course_screen.dart';
 
 const Color mainColor = Colors.blue;
 
-class CourseListScreen extends StatefulWidget {
+class CourseListScreen extends StatelessWidget { // changed from StatefulWidget to StatelessWidget
   const CourseListScreen({super.key});
 
-  @override
-  State<CourseListScreen> createState() => _CourseListScreenState();
-}
+  //   @override
+  //   State<CourseListScreen> createState() => _CourseListScreenState();
+  // }
 
-class _CourseListScreenState extends State<CourseListScreen> {
-  final List<Course> _allCourses = [Course(name: 'HTML'), Course(name: 'JAVA')];
+  // class _CourseListScreenState extends State<CourseListScreen> {
+  //   final List<Course> _allCourses = [Course(name: 'HTML'), Course(name: 'JAVA')];
 
-  void _editCourse(Course course) async {
+  void _editCourse(BuildContext context, Course course) async {
     await Navigator.of(context).push<Course>(
       MaterialPageRoute(builder: (ctx) => CourseScreen(course: course)),
     );
 
-    setState(() {
-      // trigger a rebuild
-    });
+    // setState(() {
+    //   // trigger a rebuild
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    //1- Access courses from CoursesProvider
+    final coursesProvider = context.watch<CoursesProvider>(); 
+    final _allCourses = coursesProvider.courses; 
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -39,7 +46,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
               key: Key(_allCourses[index].name),
               child: CourseTile(
                 course: _allCourses[index],
-                onEdit: _editCourse,
+                onEdit: (course) => _editCourse(context, course),
               ),
             ),
       ),

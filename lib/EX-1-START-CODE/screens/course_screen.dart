@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hw1/EX-1-START-CODE/provider/courses_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/course.dart';
 import 'course_score_form.dart';
 
@@ -20,9 +22,13 @@ class _CourseScreenState extends State<CourseScreen> {
     );
 
     if (newSCore != null) {
-      setState(() {
-        scores.add(newSCore);
-      });
+      // setState(() {
+      //   scores.add(newSCore);
+      // });
+      context.read<CoursesProvider>().addScore(
+        widget.course.name,
+        newSCore,
+      ); // Add score to the course
     }
   }
 
@@ -32,6 +38,10 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the updated course data from Provider
+    final provider = context.watch<CoursesProvider>();
+    final course = provider.getCourseFor(widget.course.name);
+    final scores = course.scores;
     Widget content = const Center(child: Text('No Scores added yet.'));
 
     if (scores.isNotEmpty) {
