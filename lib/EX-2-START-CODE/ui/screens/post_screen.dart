@@ -44,7 +44,19 @@ class PostScreen extends StatelessWidget {
         return Text('Error: ${postValue.error}'); // display a error
 
       case AsyncValueState.success:
-        return PostCard(post: postValue.data!); // display the post
+        if (postValue.data!.isEmpty) {
+          return Center(
+            child: Text('No posts for now'),
+          ); // Display a message for empty list
+        }
+
+        // Return ListView.builder to display each post in the list
+        return ListView.builder(
+          itemCount: postValue.data!.length, // Number of posts
+          itemBuilder: (context, index) {
+            return PostCard(post: postValue.data![index]); // Display each post
+          },
+        );
     }
   }
 }
